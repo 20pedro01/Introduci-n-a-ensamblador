@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Máximo y mínimo en un arreglo</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #10002b;
+            --bg-purple: #240046;
+            --bg-panel: rgba(60, 9, 108, 0.75);
+            --accent: #e0aaff;
+            --accent-glow: rgba(224, 170, 255, 0.5);
+            --highlight: #ff9e00;
+            --text-main: #ffffff;
+            --text-sec: #e0c3fc;
+            --code-bg: #19002e;
+            --border-color: rgba(224, 170, 255, 0.2);
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #5a189a, var(--bg-deep));
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+        }
+
+        /* Typography - Optimizado para 100% zoom */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #fff, #e0aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+        }
+
+        h5 {
+            font-size: 1rem;
+        }
+
+        p,
+        li {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-sec);
+            margin-bottom: 0.6rem;
+        }
+
+        .fs-4 {
+            font-size: 1.15rem !important;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Setup Animations on Active Slide */
+        .slide.active .panel {
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .slide.active h1,
+        .slide.active h2 {
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .slide.active p,
+        .slide.active li,
+        .slide.active .text-sec {
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .slide.active .row,
+        .slide.active .schema-box,
+        .slide.active .logo-container {
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        /* Side Images Animations - Reducidas para 100% zoom */
+        .side-img-left {
+            animation: float 6s ease-in-out infinite, slideInLeft 1s ease-out;
+        }
+
+        .side-img-right {
+            animation: float 6s ease-in-out infinite reverse, slideInRight 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Slides Base */
+        .slide {
+            display: none;
+            box-sizing: border-box;
+            height: 100vh;
+            padding: 0 4vw;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .text-muted {
+            color: #cbb2fe !important;
+        }
+
+        /* Responsividad Avanzada */
+        @media (max-width: 992px) {
+            .panel {
+                padding: 2rem;
+                max-height: 90vh;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 4rem 1rem 1rem 1rem;
+                align-items: flex-start;
+            }
+
+            .panel {
+                padding: 1.5rem;
+                max-height: 80vh;
+                overflow-y: scroll;
+                margin-top: 1rem;
+            }
+
+            /* Ocultar imágenes laterales en móviles para legibilidad */
+            .side-img-container {
+                display: none !important;
+            }
+
+            .side-img-left,
+            .side-img-right {
+                display: none;
+            }
+
+            /* Ajustes tipografía móvil */
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            p,
+            li {
+                font-size: 1rem;
+            }
+
+            /* Simulador Stack */
+            #code {
+                height: 200px;
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+
+            .col-lg-5,
+            .col-lg-7 {
+                width: 100%;
+            }
+
+            /* Schema Vertical */
+            .arrow {
+                transform: rotate(90deg);
+                display: block;
+                margin: 1rem 0;
+            }
+
+            /* Navegación */
+            .nav-controls {
+                bottom: 0.5rem;
+                padding: 0.5rem 1rem;
+                width: 95%;
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Glass Panel - Optimizado para 100% zoom */
+        .panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 1300px;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        /* Simulator Specifics - Optimizado para 100% zoom */
+        pre#code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--code-bg);
+            color: #e0c3fc;
+            padding: 1.2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            height: 320px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            line-height: 1.4;
+        }
+
+        .mem {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 0.7rem;
+            background: #3c096c;
+            color: #fff;
+            margin: 0.25rem;
+            font-family: 'JetBrains Mono';
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+
+        .mem.active {
+            background: #ff9e00;
+            color: #10002b;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 158, 0, 0.6);
+            border-color: #fff;
+            z-index: 5;
+        }
+
+        .pipe {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .stage {
+            flex: 1;
+            min-width: 40px;
+            text-align: center;
+            padding: 0.7rem;
+            border-radius: 0.7rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .stage.active {
+            background: #e0aaff;
+            color: #240046;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px var(--accent-glow);
+            border-color: #fff;
+            opacity: 1;
+        }
+
+        /* Flags - Optimizado */
+        .flag {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 0.4rem;
+            background: rgba(0, 0, 0, 0.4);
+            color: #777;
+            margin-right: 0.4rem;
+            font-family: 'JetBrains Mono';
+            font-size: 0.85rem;
+        }
+
+        .flag.on {
+            background: #ff006e;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
+        }
+
+        /* Navigation - Mantiene tamaño para usabilidad */
+        .nav-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1.5rem;
+            z-index: 100;
+            background: rgba(16, 0, 43, 0.9);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 1px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .nav-btn:hover {
+            color: #fff;
+            transform: scale(1.2);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        .page-indicator {
+            color: #fff;
+            align-self: center;
+            font-weight: bold;
+            font-family: 'JetBrains Mono';
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #slideInput {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--accent);
+            color: #fff;
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        #slideInput::-webkit-outer-spin-button,
+        #slideInput::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        #slideInput:focus {
+            border-bottom-color: #fff;
+        }
+
+        /* Schema - Optimizado */
+        .schema-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--accent);
+            padding: 1.2rem;
+            border-radius: 0.9rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        .arrow {
+            color: var(--highlight);
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        /* Buttons - Optimizado */
+        .btn-sim {
+            background: #3c096c;
+            border: 1px solid var(--accent);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-sim:hover {
+            background: #5a189a;
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .btn-run {
+            background: #ff9e00;
+            color: #10002b;
+            font-weight: bold;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-run:hover {
+            background: #ffb700;
+            box-shadow: 0 0 20px rgba(255, 158, 0, 0.6);
+        }
+
+        .btn-outline-light {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Logo - Optimizado */
+        .logo-container img {
+            max-height: 90px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+        }
+
+        .code-active {
+            background: rgba(255, 158, 0, 0.2);
+            border-left: 4px solid #ff9e00;
+            color: #fff;
+            padding-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. PORTADA -->
+    <section class="slide active">
+        <!-- IMÁGENES LATERALES -->
+        <div class="side-img-left" style="position: absolute; left: 1.5vw; bottom: 0; width: 20vw; z-index: 1;">
+            <img src="1.png"
+                style="width: 100%; mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, transparent 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, transparent 100%);">
+        </div>
+        <div class="side-img-right" style="position: absolute; right: 1.5vw; bottom: 0; width: 20vw; z-index: 1;">
+            <img src="2.png"
+                style="width: 100%; mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, transparent 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, transparent 100%);">
+        </div>
+
+        <!-- PANEL CENTRAL -->
+        <div class="panel text-center" style="position: relative; z-index: 5; max-width: 750px;">
+            <div class="logo-container">
+                <!-- Placeholder para Logo si no carga -->
+                <img src="logo.png" alt="Logo ITSVA"
+                    onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';">
+                <h2 id="logo-text" style="display:none; color:var(--accent);">ITSVA</h2>
+            </div>
+
+            <h1>Máximo y mínimo en un arreglo</h1>
+            <p class="fs-4 text-sec mb-4">Ensamblador x64</p>
+
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-5 text-end pe-4 border-end border-secondary">
+                    <h4 class="text-white">Institución</h4>
+                    <p>TECNM Campus Valladolid</p>
+                    <p>Ing. Sistemas Computacionales</p>
+                    <p>Lenguajes de Interfaz</p>
+                    <p>6° "C"</p>
+                </div>
+                <div class="col-md-5 text-start ps-4">
+                    <h4 class="text-white">Equipo de desarrollo:</h4>
+                    <ul class="list-unstyled">
+                        <li>Cauich Pat Pedro Antonio</li>
+                        <li>Chan Xooc Brenda Argelia</li>
+                        <li>Corona Noh Gabriel Danneshe</li>
+                        <li>Pat Canché Karla Cristina</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4 pt-2">
+                <small class="text-muted">Docente: Ing. Luis Adrián Balam Espadas</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. CONTEXTO -->
+    <section class="slide">
+        <div class="panel">
+            <div class="row align-items-center h-100">
+                <div class="col-lg-6 text-center">
+                    <h2>Contexto del proyecto</h2>
+                    <p class="mt-3">
+                        La programación en bajo nivel permite un control granular sobre el hardware. En este proyecto
+                        analizamos
+                        el algoritmo de búsqueda lineal para encontrar valores extremos (mínimo y máximo) en un arreglo
+                        usando lenguaje ensamblador.
+                    </p>
+                    <div class="mt-3 p-3 rounded mx-auto"
+                        style="background: rgba(0,0,0,0.3); border-top: 3px solid var(--highlight); max-width: 90%;">
+                        <h5 class="text-white">Objetivos:</h5>
+                        <ul class="mb-0 list-unstyled">
+                            <li>• Entender el ciclo de instrucción (pipeline).</li>
+                            <li>• Visualizar el uso de banderas en saltos condicionales.</li>
+                            <li>• Manipular punteros de memoria directamente.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div style="font-size: 4.5rem;">🔍 🏎️ 💾</div>
+                    <p class="mt-2">Optimización y análisis de recursos</p>
+                    <a href="#" target="_blank"
+                        style="color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); font-size: 0.9rem;">
+                        Haz clic aquí para abrir el código
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SIMULADOR -->
+    <section class="slide">
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="mb-0">Funcionamiento (simulador)</h2>
+                <span class="badge bg-dark border border-light">Estado: <span id="status-badge"
+                        class="text-warning">Listo</span></span>
+            </div>
+
+            <div class="row g-3">
+                <!-- Columna Izquierda: Código -->
+                <div class="col-lg-5">
+                    <pre id="code"></pre>
+                    <div class="mt-2 p-2 rounded bg-dark border border-secondary">
+                        <strong class="d-block text-warning mb-1" style="font-size: 0.9rem;">Explicación:</strong>
+                        <span id="explain" class="text-light" style="font-size: 0.9rem;">Empezando simulación...</span>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Visualización -->
+                <div class="col-lg-7">
+                    <!-- Registros -->
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="p-2 rounded bg-dark border border-secondary h-100">
+                                <h5 class="text-accent border-bottom border-secondary pb-2"
+                                    style="font-size: 1rem; margin-bottom: 0.5rem;">Registros CPU</h5>
+                                <div id="regs"
+                                    style="font-family: 'JetBrains Mono'; white-space: pre-wrap; font-size: 0.85rem;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-2 rounded bg-dark border border-secondary h-100">
+                                <h5 class="text-accent border-bottom border-secondary pb-2"
+                                    style="font-size: 1rem; margin-bottom: 0.5rem;">Banderas (RFLAGS)</h5>
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <span class="flag" id="ZF" title="Zero Flag: Indica si el resultado es cero">ZF
+                                        (Zero)</span>
+                                    <span class="flag" id="SF" title="Sign Flag: Indica si el resultado es negativo">SF
+                                        (Sign)</span>
+                                    <span class="flag" id="CF" title="Carry Flag: Indica acarreo (no usado)">CF
+                                        (Carry)</span>
+                                    <span class="flag" id="OF"
+                                        title="Overflow Flag: Indica desbordamiento (no usado)">OF (Over)</span>
+                                </div>
+                                <div class="mt-2 small text-muted" style="font-size: 0.8rem;">Determinan si se salta o
+                                    no.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Memoria -->
+                    <div class="mb-2">
+                        <h5 class="text-muted" style="font-size: 1rem; margin-bottom: 0.5rem;">Memoria RAM (arreglo)
+                        </h5>
+                        <div id="memory" class="d-flex flex-wrap"></div>
+                    </div>
+
+                    <!-- Pipeline -->
+                    <div class="mb-3">
+                        <h5 class="text-muted" style="font-size: 1rem; margin-bottom: 0.5rem;">Pipeline de instrucción
+                        </h5>
+                        <div class="pipe">
+                            <div class="stage" id="IF" title="Instruction Fetch: Leer instrucción de memoria">IF</div>
+                            <div class="stage" id="ID" title="Instruction Decode: Decodificar qué hacer">ID</div>
+                            <div class="stage" id="EX" title="Execute: Realizar operación en ALU">EX</div>
+                            <div class="stage" id="MEM" title="Memory Access: Leer/Escribir datos">MEM</div>
+                            <div class="stage" id="WB" title="Write Back: Guardar resultados en registros">WB</div>
+                        </div>
+                    </div>
+
+                    <!-- Controles -->
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button id="prevBtn" class="btn btn-sim" onclick="prevStep()">⬅ Atrás</button>
+                        <button id="nextBtn" class="btn btn-sim" onclick="nextStep()">Siguiente ➡</button>
+                        <button id="runBtn" class="btn btn-run" onclick="toggleRun()">🚀 Ejecutar todo</button>
+                        <button class="btn btn-outline-light" onclick="reset()">↺ Reiniciar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ARQUITECTURA -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Arquitectura interna</h2>
+            <p class="mb-4">Flujo de datos simplificado durante la ejecución</p>
+
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-3">
+                    <div class="schema-box">
+                        <h3 class="text-warning">CPU</h3>
+                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Registros (EAX, EBX...)</div>
+                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">ALU (comparaciones)</div>
+                    </div>
+                </div>
+                <div class="col-md-1"><span class="arrow">↔</span></div>
+                <div class="col-md-3">
+                    <div class="schema-box" style="border-color: #fff;">
+                        <h3>BUS</h3>
+                        <p class="small mb-0" style="font-size: 0.85rem;">Direcciones y datos</p>
+                    </div>
+                </div>
+                <div class="col-md-1"><span class="arrow">↔</span></div>
+                <div class="col-md-3">
+                    <div class="schema-box">
+                        <h3 class="text-success">RAM</h3>
+                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Arreglo [ ]</div>
+                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">Variables</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CRÍTICO -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Puntos críticos del sistema</h2>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <h4 class="text-warning">1. Punteros (RSI)</h4>
+                    <p>El manejo manual de direcciones de memoria es peligroso. Un incremento erróneo (ejemplo: sumar 2
+                        en vez de 4 bytes) leería datos corruptos.</p>
+                </div>
+                <div class="col-md-4 border-start border-secondary">
+                    <h4 class="text-info">2. Banderas (flags)</h4>
+                    <p>Las decisiones lógicas dependen de estados invisibles (ZF, SF). Si una instrucción intermedia
+                        altera las banderas antes del salto, el programa falla.</p>
+                </div>
+                <div class="col-md-4 border-start border-secondary">
+                    <h4 class="text-danger">3. Límites</h4>
+                    <p>No existe protección automática de "Index Out of Bounds". Es responsabilidad del programador
+                        verificar el contador (ECX) antes de leer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. FALLOS -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Posibles causas de fallo</h2>
+            <ul class="list-group mt-4 bg-transparent">
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <strong class="text-danger">⚠ Bucle infinito:</strong> Si ECX no se decrementa o la condición de
+                    salto es incorrecta (JMP en lugar de condicionales).
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <strong class="text-danger">⚠ Lectura de basura:</strong> Acceder a memoria no inicializada más allá
+                    del final del arreglo.
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary">
+                    <strong class="text-danger">⚠ Overflow con signo:</strong> Interpretar un número muy grande
+                    (unsigned) como negativo (signed) al usar comparaciones con signo (JG/JL vs JA/JB).
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 7. CONCLUSIÓN -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Conclusiones</h2>
+            <div class="col-md-8 mx-auto mt-4 text-start">
+                <p>1. <strong>Eficiencia:</strong> El ensamblador permite optimizaciones extremas al eliminar capas de
+                    abstracción.</p>
+                <p>2. <strong>Control:</strong> Entender estos conceptos es fundamental para el desarrollo de drivers,
+                    sistemas operativos y sistemas embebidos.</p>
+                <p>3. <strong>Complejidad:</strong> La gestión manual de memoria y flujo requiere una disciplina
+                    rigurosa para evitar errores fatales.</p>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-accent">"El software eficiente empieza conociendo el hardware."</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTROLES DE NAVEGACIÓN -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="globalChange(-1)">◄</button>
+        <div class="page-indicator">
+            <input type="number" id="slideInput" value="1" min="1" max="7" onchange="jumpToSlide(this.value)">
+            / <span id="totalSlides">7</span>
+        </div>
+        <button class="nav-btn" onclick="globalChange(1)">►</button>
+    </div>
+
+    <script>
+        // --- CONTROL DE DIAPOSITIVAS ---
+        const slides = document.querySelectorAll(".slide");
+        let slideIndex = 0;
+        document.getElementById("totalSlides").innerText = slides.length;
+        document.getElementById("slideInput").max = slides.length;
+
+        function globalChange(d) {
+            slides[slideIndex].classList.remove("active");
+            slideIndex = (slideIndex + d + slides.length) % slides.length;
+            slides[slideIndex].classList.add("active");
+            // Update input
+            document.getElementById("slideInput").value = slideIndex + 1;
+        }
+
+        function jumpToSlide(val) {
+            let newIndex = parseInt(val) - 1;
+            if (newIndex >= 0 && newIndex < slides.length) {
+                slides[slideIndex].classList.remove("active");
+                slideIndex = newIndex;
+                slides[slideIndex].classList.add("active");
+            } else {
+                // Revertir si es inválido
+                document.getElementById("slideInput").value = slideIndex + 1;
+            }
+        }
+
+        document.addEventListener("keydown", e => {
+            if (e.key === "ArrowRight") globalChange(1);
+            if (e.key === "ArrowLeft") globalChange(-1);
+        });
+
+        // --- SIMULADOR (LÓGICA) ---
+        const memory = [45, 12, 89, 3, 67, 23, 91, 8, 56, 34];
+        var cpu = { EAX: 0, EBX: 0, ECX: 0, EDX: 0, RSI: 0, FLAGS: { ZF: false, SF: false, CF: false, OF: false } };
+        var pc = 0;
+        var finished = false;
+        var running = false;
+        var historyStats = [];
+
+        // Programa definido con etiquetas y lógica
+        const program = [
+            { asm: "mov ecx, 10", exec: function () { cpu.ECX = 10; }, explain: "Inicializa el contador con el tamaño del arreglo." },
+            { asm: "mov eax, [rsi]", exec: function () { cpu.EAX = memory[0]; }, explain: "Carga el primer dato (45) en EAX." },
+            { asm: "mov ebx, eax", exec: function () { cpu.EBX = cpu.EAX; }, explain: "Asume que el primero es el máximo por ahora." },
+            { asm: "mov edx, eax", exec: function () { cpu.EDX = cpu.EAX; }, explain: "Asume que el primero es el mínimo por ahora." },
+            { asm: "dec ecx", exec: function () { cpu.ECX--; }, explain: "Decrementa contador (ya leímos uno)." },
+            { asm: "add rsi, 4", exec: function () { cpu.RSI += 4; }, explain: "Mueve el puntero al siguiente entero." },
+
+            { label: "bucle", asm: "bucle:", explain: "Etiqueta de inicio del ciclo." },
+            { asm: "cmp ecx, 0", exec: function () { cmp(cpu.ECX, 0); }, explain: "¿Quedan elementos? Compara ECX con 0." },
+            { asm: "je fin", exec: function () { if (cpu.FLAGS.ZF) { pc = getLabelIndex("fin"); finished = true; } }, explain: "Si es 0, terminamos." },
+
+            { asm: "mov eax, [rsi]", exec: function () { cpu.EAX = memory[cpu.RSI / 4]; }, explain: "Lee el siguiente número del arreglo." },
+
+            // Max check
+            { asm: "cmp eax, ebx", exec: function () { cmp(cpu.EAX, cpu.EBX); }, explain: "Compara actual vs máximo." },
+            { asm: "jle skip_max", exec: function () { if (cpu.FLAGS.SF || cpu.FLAGS.ZF) pc = getLabelIndex("skip_max"); }, explain: "Si es menor/igual, no es nuevo máximo." },
+            { asm: "mov ebx, eax", exec: function () { cpu.EBX = cpu.EAX; }, explain: "¡Nuevo máximo encontrado! Actualiza EBX." },
+            { label: "skip_max", asm: "skip_max:", explain: "Punto de salto si no hay nuevo máximo." },
+
+            // Min check
+            { asm: "cmp eax, edx", exec: function () { cmp(cpu.EAX, cpu.EDX); }, explain: "Compara actual vs mínimo." },
+            { asm: "jle skip_min", exec: function () { if (!cpu.FLAGS.SF || cpu.FLAGS.ZF) pc = getLabelIndex("skip_min"); }, explain: "Si es mayor/igual, no es nuevo mínimo." },
+            // NOTA: jge lógica inversa para evitar update.
+            // EAX (Actual) < EDX (Min) -> SF=1. Si SF=0 (o ZF=1), saltamos.
+
+            { asm: "mov edx, eax", exec: function () { cpu.EDX = cpu.EAX; }, explain: "¡Nuevo mínimo encontrado! Actualiza EDX." },
+            { label: "skip_min", asm: "skip_min:", explain: "Punto de salto si no hay nuevo mínimo." },
+
+            { asm: "add rsi, 4", exec: function () { cpu.RSI += 4; }, explain: "Avanza puntero." },
+            { asm: "dec ecx", exec: function () { cpu.ECX--; }, explain: "Decrementa contador." },
+            { asm: "jmp bucle", exec: function () { pc = getLabelIndex("bucle"); }, explain: "Vuelve al inicio del bucle." },
+
+            { label: "fin", asm: "fin:", explain: "Fin del programa." }
+        ];
+
+        // Corrección rápida de lógica de salto para visualización simple
+        // JGE skip_min (Si Actual >= Minimo, saltar). 
+        // EAX - EDX. Si EAX >= EDX -> Resultado positivo (SF=0) o cero (ZF=1).
+        // La instrucción en array original era JGE. Re-implementado en línea 142 de forma segura.
+
+        function getLabelIndex(name) {
+            return program.findIndex(i => i.label === name);
+        }
+
+        function cmp(a, b) {
+            let res = a - b;
+            cpu.FLAGS.ZF = (res === 0);
+            cpu.FLAGS.SF = (res < 0);
+        }
+
+        function render() {
+            // Render Code
+            const codeContainer = document.getElementById("code");
+            codeContainer.innerHTML = program.map((line, idx) => {
+                if (!line.asm && !line.label) return "";
+                const txt = line.asm || line.label;
+                const isActive = (idx === pc);
+                return `<div class="${isActive ? 'code-active' : ''}">${isActive ? '👉 ' : '   '}${txt}</div>`;
+            }).join("");
+
+            // Auto scroll logic
+            if (pc > 4) {
+                const rowHeight = 24;
+                codeContainer.scrollTop = (pc - 4) * rowHeight;
+            }
+
+            // Render Regs
+            document.getElementById("regs").textContent =
+                `EAX: ${cpu.EAX.toString().padEnd(5)} [Dato]
+EBX: ${cpu.EBX.toString().padEnd(5)} [MAX]
+EDX: ${cpu.EDX.toString().padEnd(5)} [MIN]
+ECX: ${cpu.ECX.toString().padEnd(5)} [Count]
+RSI: ${cpu.RSI.toString().padEnd(5)} [Ptr]`;
+
+            // Render Flags
+            document.getElementById("ZF").className = "flag" + (cpu.FLAGS.ZF ? " on" : "");
+            document.getElementById("SF").className = "flag" + (cpu.FLAGS.SF ? " on" : "");
+            document.getElementById("CF").className = "flag" + (cpu.FLAGS.CF ? " on" : "");
+            document.getElementById("OF").className = "flag" + (cpu.FLAGS.OF ? " on" : "");
+
+            // Render Memory
+            document.getElementById("memory").innerHTML = memory.map((val, idx) => {
+                const isCurrent = (idx === cpu.RSI / 4);
+                return `<div class="mem ${isCurrent ? 'active' : ''}">${val}</div>`;
+            }).join("");
+
+            // Explain
+            const currentLine = program[pc];
+            const explainTxt = finished ? "Ejecución finalizada." : (currentLine ? currentLine.explain : "...");
+            document.getElementById("explain").innerText = explainTxt;
+
+            document.getElementById("status-badge").innerText = finished ? "Terminado" : (running ? "Ejecutando..." : "Pausado");
+
+            const runBtn = document.getElementById("runBtn");
+            if (running) {
+                runBtn.innerHTML = "⏸ Pausar";
+            } else {
+                runBtn.innerHTML = "🚀 Ejecutar todo";
+            }
+        }
+
+        function animatePipe() {
+            if (finished) return;
+            const stages = ["IF", "ID", "EX", "MEM", "WB"];
+            stages.forEach((s, i) => {
+                setTimeout(() => {
+                    let el = document.getElementById(s);
+                    if (el) {
+                        el.classList.add("active");
+                        setTimeout(() => el.classList.remove("active"), 150);
+                    }
+                }, i * 100);
+            });
+        }
+
+        function nextStep() {
+            if (finished || pc >= program.length) return;
+
+            animatePipe();
+
+            // Guardar estado para "Atrás"
+            historyStats.push(JSON.stringify({ cpu: { ...cpu, FLAGS: { ...cpu.FLAGS } }, pc: pc }));
+
+            // Ejecutar
+            if (program[pc].exec) program[pc].exec();
+
+            // Avanzar PC si no se modificó por un salto (hack simple: checar si cambió bruscamente o lineal)
+            // En realidad, mi lógica de exec YA actualiza el PC si hay salto.
+            // Si no hubo salto, incrementamos 1.
+            // PERO: mis funciones exec de salto actualizan PC. Las otras no.
+            // Debemos saber si exec actualizó PC.
+            let oldPC = pc;
+            // Si la instrucción es JMP/JE/etc, ellas mismas cambian PC.
+            // Si la instrucción es MOV/ADD, ellas NO cambian PC.
+            // Checamos si la instrucción ejecutada era de control de flujo.
+            const asm = program[oldPC].asm || "";
+            const isJump = asm.startsWith("j");
+
+            // Si NO es salto, o es salto condicional que NO saltó (PC sigue igual), avanzamos manual.
+            // Espera, mi lógica en exec para saltos es: if(cond) pc = newIndex.
+            // Si pc sigue siendo oldPC, significa que o no era salto, o no se cumplió condición.
+            // ENTONCES, siempre incrementamos pc si pc == oldPC.
+
+            // Pequeño bug potencial: si salto al MISMO lugar (bucle infinito a si mismo), esto fallaría.
+            // Pero aquí no hay eso.
+            if (pc === oldPC) {
+                pc++;
+            }
+
+            render();
+        }
+
+        function prevStep() {
+            if (historyStats.length === 0 || running) return;
+            const state = JSON.parse(historyStats.pop());
+            cpu = state.cpu;
+            pc = state.pc;
+            finished = false;
+            render();
+        }
+
+        function toggleRun() {
+            if (finished) return;
+
+            if (running) {
+                running = false;
+                render();
+            } else {
+                running = true;
+                render();
+
+                function loop() {
+                    if (!running) return;
+                    if (finished || pc >= program.length) {
+                        running = false;
+                        render();
+                        return;
+                    }
+                    nextStep();
+                    setTimeout(loop, 600);
+                }
+                loop();
+            }
+        }
+
+        function reset() {
+            running = false;
+            finished = false;
+            pc = 0;
+            historyStats = [];
+            cpu = { EAX: 0, EBX: 0, ECX: 0, EDX: 0, RSI: 0, FLAGS: { ZF: false, SF: false, CF: false, OF: false } };
+            render();
+        }
+
+        // Init
+        render();
+
+    </script>
+
+</body>
+
+</html>

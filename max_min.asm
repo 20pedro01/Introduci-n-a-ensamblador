@@ -1,5 +1,5 @@
 ; ============================================================================
-; PROGRAMA: Búsqueda de Máximo y Mínimo en Arreglo
+; PROGRAMA: Búsqueda de máximo y mínimo en un arreglo
 ; ARQUITECTURA: x64
 ; ENSAMBLADOR: MASM (ml64.exe)
 ; ============================================================================
@@ -238,5 +238,6 @@ imprimir_numero PROC
     pop rbp
     ret
 imprimir_numero ENDP
+
 
 END

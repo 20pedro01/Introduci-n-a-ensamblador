@@ -626,7 +626,8 @@
                 <div class="col-lg-6 text-center">
                     <div style="font-size: 4.5rem;">🔍 🏎️ 💾</div>
                     <p class="mt-2">Optimización y análisis de recursos</p>
-                    <a href="https://github.com/20pedro01/Introduci-n-a-ensamblador/blob/main/max_min.asm" target="_blank"
+                    <a href="https://github.com/20pedro01/Introduci-n-a-ensamblador/blob/main/max_min.asm"
+                        target="_blank"
                         style="color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); font-size: 0.9rem;">
                         Haz clic aquí para abrir el código
                     </a>
@@ -635,7 +636,140 @@
         </div>
     </section>
 
-    <!-- 3. SIMULADOR -->
+    <!-- 3A. VARIABLES NO EXISTEN -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h1>Las variables no existen</h1>
+            <h3 class="mt-4" style="color: var(--accent); font-size: 2rem;">
+                "Las variables no existen en la computadora.<br>
+                Existen solo en nuestra cabeza."
+            </h3>
+
+            <div class="my-5 p-4 rounded"
+                style="background: var(--code-bg); display: inline-block; border: 1px solid var(--accent);">
+                <code style="color: #ff9e00; font-size: 2.5rem; font-family: 'JetBrains Mono';">int edad = 72;</code>
+            </div>
+
+            <div class="mb-4">
+                <img src="3.png" alt="Variables visualization"
+                    style="max-height: 200px; border-radius: 10px; box-shadow: 0 0 15px rgba(224, 170, 255, 0.3);">
+            </div>
+
+            <p class="fs-4 text-sec">
+                "El nombre es solo una etiqueta mental creada por el programador."
+            </p>
+        </div>
+    </section>
+
+    <!-- 3B. RAM REAL -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>La memoria RAM real</h2>
+            <p class="fs-4 mb-4">"La RAM es una secuencia enorme de celdas con direcciones únicas."</p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="p-3 rounded text-start mx-auto"
+                        style="background: var(--code-bg); font-family: 'JetBrains Mono'; color: var(--text-sec); border: 1px solid var(--border-color); max-width: 400px;">
+                        <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2">
+                            <span style="color: var(--highlight);">Dirección</span>
+                            <span style="color: #fff;">Contenido (Bits)</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>0x1000</span> <span class="text-white">01001000</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>0x1001</span> <span class="text-muted">00000000</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>0x1002</span> <span class="text-muted">00000000</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>0x1003</span> <span class="text-muted">00000000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-4 fs-4 text-warning">
+                "La memoria no sabe qué es una variable, solo conoce bits."
+            </p>
+        </div>
+    </section>
+
+    <!-- 3C. SIGNIFICADO -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Los bits no tienen significado</h2>
+
+            <div class="mt-4 mb-5">
+                <div class="p-3 rounded d-inline-block"
+                    style="background: var(--code-bg); border: 2px solid var(--accent);">
+                    <span
+                        style="font-family: 'JetBrains Mono'; font-size: 3rem; color: #fff; letter-spacing: 5px;">01001000</span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center gap-4">
+                <div class="col-md-4">
+                    <div class="schema-box">
+                        <h4 class="text-info">Como Entero</h4>
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #fff;">72</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="schema-box">
+                        <h4 class="text-warning">Como ASCII</h4>
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #fff;">'H'</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-5 fs-4 text-sec">
+                "Mismos bits, misma dirección, diferente interpretación."
+            </p>
+        </div>
+    </section>
+
+    <!-- 3D. ARQUITECTURA REAL -->
+    <section class="slide">
+        <div class="panel text-center">
+            <h2>Arquitectura real durante la ejecución</h2>
+
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-md-3">
+                    <div class="schema-box">
+                        <h3 class="text-warning">CPU</h3>
+                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Registros</div>
+                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">ALU</div>
+                    </div>
+                </div>
+                <div class="col-md-1"><span class="arrow">↔</span></div>
+                <div class="col-md-3">
+                    <div class="schema-box" style="border-color: #fff;">
+                        <h3>BUS</h3>
+                        <p class="small mb-0" style="font-size: 0.85rem;">Direcciones y Datos</p>
+                    </div>
+                </div>
+                <div class="col-md-1"><span class="arrow">↔</span></div>
+                <div class="col-md-3">
+                    <div class="schema-box">
+                        <h3 class="text-success">RAM</h3>
+                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Solo Bits</div>
+                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">Direcciones</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-5 fs-4" style="color: var(--highlight);">
+                "En ensamblador no trabajamos con variables,<br>
+                trabajamos directamente con direcciones y bytes."
+            </p>
+        </div>
+    </section>
+
+
+    <!-- 7. SIMULADOR -->
     <section class="slide">
         <div class="panel">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -719,40 +853,9 @@
         </div>
     </section>
 
-    <!-- 4. ARQUITECTURA -->
-    <section class="slide">
-        <div class="panel text-center">
-            <h2>Arquitectura interna</h2>
-            <p class="mb-4">Flujo de datos simplificado durante la ejecución</p>
 
-            <div class="row justify-content-center align-items-center">
-                <div class="col-md-3">
-                    <div class="schema-box">
-                        <h3 class="text-warning">CPU</h3>
-                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Registros (EAX, EBX...)</div>
-                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">ALU (comparaciones)</div>
-                    </div>
-                </div>
-                <div class="col-md-1"><span class="arrow">↔</span></div>
-                <div class="col-md-3">
-                    <div class="schema-box" style="border-color: #fff;">
-                        <h3>BUS</h3>
-                        <p class="small mb-0" style="font-size: 0.85rem;">Direcciones y datos</p>
-                    </div>
-                </div>
-                <div class="col-md-1"><span class="arrow">↔</span></div>
-                <div class="col-md-3">
-                    <div class="schema-box">
-                        <h3 class="text-success">RAM</h3>
-                        <div class="bg-dark p-2 rounded mb-2" style="font-size: 0.9rem;">Arreglo [ ]</div>
-                        <div class="bg-dark p-2 rounded" style="font-size: 0.9rem;">Variables</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- 5. CRÍTICO -->
+    <!-- 8. CRÍTICO -->
     <section class="slide">
         <div class="panel text-center">
             <h2>Puntos críticos del sistema</h2>
@@ -776,7 +879,7 @@
         </div>
     </section>
 
-    <!-- 6. FALLOS -->
+    <!-- 9. FALLOS -->
     <section class="slide">
         <div class="panel text-center">
             <h2>Posibles causas de fallo</h2>
@@ -794,10 +897,14 @@
                     (unsigned) como negativo (signed) al usar comparaciones con signo (JG/JL vs JA/JB).
                 </li>
             </ul>
+            <div class="mt-4">
+                <img src="4.jpg" alt="Error visualization"
+                    style="max-height: 250px; border-radius: 10px; border: 2px solid var(--border-color);">
+            </div>
         </div>
     </section>
 
-    <!-- 7. CONCLUSIÓN -->
+    <!-- 10. CONCLUSIONES -->
     <section class="slide">
         <div class="panel text-center">
             <h2>Conclusiones</h2>
@@ -819,8 +926,8 @@
     <div class="nav-controls">
         <button class="nav-btn" onclick="globalChange(-1)">◄</button>
         <div class="page-indicator">
-            <input type="number" id="slideInput" value="1" min="1" max="7" onchange="jumpToSlide(this.value)">
-            / <span id="totalSlides">7</span>
+            <input type="number" id="slideInput" value="1" min="1" max="10" onchange="jumpToSlide(this.value)">
+            / <span id="totalSlides">10</span>
         </div>
         <button class="nav-btn" onclick="globalChange(1)">►</button>
     </div>
@@ -1070,4 +1177,3 @@ RSI: ${cpu.RSI.toString().padEnd(5)} [Ptr]`;
 
 
 </html>
-
